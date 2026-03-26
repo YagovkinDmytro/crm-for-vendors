@@ -28,7 +28,7 @@ export default function StatusLabel({
         status === Status.Pending && 'text-[#c2410c] bg-[#ffedd5]',
         status === Status.Suspended && 'text-[#1d4ed8] bg-[#dbeafe]',
         {
-          ['opacity-75 cursor-not-allowed']: disabled,
+          ['opacity-55 cursor-not-allowed']: disabled,
         },
       )}
     >
