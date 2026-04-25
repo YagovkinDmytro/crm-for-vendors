@@ -1,8 +1,7 @@
-import Header from '@/app/components/header';
 import { notFound } from 'next/navigation';
 
 export interface PageProps {
-  params: Promise<{ id: string }>;
+  params: { id: string };
 }
 
 export default async function Page({ params }: PageProps) {
@@ -14,9 +13,8 @@ export default async function Page({ params }: PageProps) {
   }
 
   return (
-    <>
-      <Header>Company ({id})</Header>
-      <p>{new Date().toTimeString()}</p>
-    </>
+    <div className='py-6 px-10'>
+      <p>{`Information about company (${params.id})`}</p>
+    </div>
   );
 }
