@@ -4,6 +4,7 @@ export interface PageProps {
   params: { id: string };
 }
 
-export default function Page({ params }: PageProps) {
-  return <Header>{`Company(${params.id})`}</Header>;
+export default async function Page({ params }: PageProps) {
+  const { id } = await params;
+  return <Header>{`Company(${id})`}</Header>;
 }
