@@ -103,6 +103,19 @@ interface CompanyRow {
   avatar?: string;
 }
 
+interface CreateCompanyRow {
+  title: string;
+  description: string;
+  status: CompanyStatus;
+  joined_date: string;
+  has_promotions: boolean;
+  category_id: string;
+  category_title: string;
+  country_id: string;
+  country_title: string;
+  avatar?: string;
+}
+
 interface PromotionRow {
   id: string;
   title: string;
@@ -170,6 +183,21 @@ const mapCompany = (row: CompanyRow): Company => ({
   countryId: row.country_id,
   countryTitle: row.country_title,
   avatar: row.avatar,
+});
+
+const mapCreateCompany = (
+  data: Omit<Company, 'id' | 'hasPromotions'>,
+): CreateCompanyRow => ({
+  title: data.title,
+  description: data.description,
+  status: data.status,
+  joined_date: data.joinedDate,
+  has_promotions: false,
+  category_id: data.categoryId,
+  category_title: data.categoryTitle,
+  country_id: data.countryId,
+  country_title: data.countryTitle,
+  avatar: data.avatar,
 });
 
 const mapPromotion = (row: PromotionRow): Promotion => ({
@@ -316,4 +344,40 @@ export const getSummaryCountries = async (
     count: companies.filter((company) => company.countryId === country.id)
       .length,
   }));
+};
+
+export const createCompany = async (
+  data: Omit<Company, 'id' | 'hasPromotions'>,
+  init?: RequestInit,
+) => {
+  const rows = await sendRequest<CompanyRow[]>(buildUrl('companies'), {
+    ...init,
+    method: 'POST',
+    body: JSON.stringify(mapCreateCompany(data)),
+    headers: {
+      ...(init && init.headers),
+      'content-type': 'application/json',
+      Prefer: 'return=representation',
+    },
+  });
+
+  if (!rows[0]) {
+    throw new Error('Created company not returned');
+  }
+
+  return mapCompany(rows[0]);
+};
+
+export const createPromotion = async (
+  data: Omit<Promotion, 'id'>,
+  init?: RequestInit,
+) => {
+  return sendRequest<Promotion>(buildUrl('promotions'), {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: {
+      ...(init && init.headers),
+      'content-type': 'application/json',
+    },
+  });
 };
